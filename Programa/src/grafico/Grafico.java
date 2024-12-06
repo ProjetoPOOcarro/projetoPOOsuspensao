@@ -28,7 +28,7 @@ public class Grafico {
         });
     }
 
-    // Construtor que configura a janela
+    // Construtor que configura a janelaa
     public Grafico() {
         janela = new JFrame();
         janela.setBounds(100, 100, 800, 600);
