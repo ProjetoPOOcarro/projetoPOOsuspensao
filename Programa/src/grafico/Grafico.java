@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class Grafico {
+	
     private JFrame janela;
     private JPanel painel;
     private int ondaX = 0; // Posição inicial das ondas (à esquerda)
