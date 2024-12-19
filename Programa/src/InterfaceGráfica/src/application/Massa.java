@@ -1,4 +1,4 @@
-package application;
+package InterfaceGráfica.src.application;
 
 //Representa apenas uma massa suspensa, carroceria por exemplo
 public class Massa extends Peça{

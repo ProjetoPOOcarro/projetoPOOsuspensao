@@ -1,4 +1,4 @@
-package application;
+package InterfaceGráfica.src.application;
 
 public class Veiculo {
 	
