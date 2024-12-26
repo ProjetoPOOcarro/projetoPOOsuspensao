@@ -5,5 +5,10 @@ public class Mola extends Peça{
 	
 	//Atributos
 	double ConstanteK;
+	
+	//Construtor
+    public Mola(double ConstanteK) {
+        this.ConstanteK = ConstanteK;
+    }
 
 }

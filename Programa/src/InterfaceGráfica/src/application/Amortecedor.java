@@ -6,4 +6,9 @@ public class Amortecedor extends Peça{
 	//Atriburtos
 	double ConstanteC;
 	
+	//Construtor
+    public Amortecedor(double ConstanteC) {
+        this.ConstanteC = ConstanteC;
+    }
+	
 }

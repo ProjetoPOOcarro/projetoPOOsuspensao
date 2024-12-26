@@ -48,7 +48,7 @@ public class Teste extends Application {
         series.setName("Movimento do Sistema");
 
         // Adicionando dados à série (apenas um exemplo de dados)
-        for (int i = 0; i < 200; i++) {
+        for (double i = 0; i < 200; i = i + 0.1) {
             series.getData().add(new XYChart.Data<>(i, Math.sin(i * 0.1)));
         }
 
