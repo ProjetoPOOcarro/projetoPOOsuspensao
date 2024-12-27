@@ -1,5 +1,4 @@
 package application;
-
 import javafx.scene.image.Image;
 import javafx.application.Application;
 import javafx.animation.TranslateTransition;
