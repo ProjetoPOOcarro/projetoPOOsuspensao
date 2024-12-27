@@ -10,5 +10,10 @@ public class Mola extends Peça{
     public Mola(double ConstanteK) {
         this.ConstanteK = ConstanteK;
     }
+    
+	//Getter
+    public double getConstanteK() {
+        return ConstanteK;
+    }
 
 }
