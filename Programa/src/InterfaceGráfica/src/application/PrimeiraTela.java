@@ -8,8 +8,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 class PrimeiraTela {
-    private TextField[] caixasDeTexto = new TextField[6];
-    private Button[] botoes = new Button[6];
+    private TextField[] caixasDeTexto = new TextField[5];
+    private Button[] botoes = new Button[5];
     Simulador simulador = new Simulador();
 
 
@@ -21,9 +21,9 @@ class PrimeiraTela {
         titulo.setLayoutY(10);
         painel.getChildren().add(titulo);
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 5; i++) {
         	int aux=i;
-            Label textoCaixa = new Label(simulador.getTexto(aux));
+            Label textoCaixa = new Label(Simulador.getTexto(aux));
             textoCaixa.setStyle("-fx-font-size: 12px; -fx-font-family: 'Arial';");
             textoCaixa.setLayoutX(20);
             textoCaixa.setLayoutY(60 + i * 40);
@@ -45,16 +45,21 @@ class PrimeiraTela {
     private void configurarBotao(int aux, Stage primaryStage) {
         botoes[aux].setOnAction(event -> {
             try {
-                float valor = Float.parseFloat(caixasDeTexto[aux].getText());
+                double valor = Double.parseDouble(caixasDeTexto[aux].getText());
                 simulador.atribuirValor(aux, valor);
                 caixasDeTexto[aux].setStyle("-fx-border-color: green;");
                 if (simulador.todosValoresDefinidos()) {
+                	configurarVariáveis();
                     primaryStage.close();
                     simulador.abrirSegundaTela(primaryStage);
                 }
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException erro) {
                 caixasDeTexto[aux].setStyle("-fx-border-color: red;");
             }
         });
+    }
+    private void configurarVariáveis() {
+    	Amortecedor ConstanteC = new Amortecedor();
+    	ConstanteC.setAmortecedor();
     }
 }
