@@ -1,4 +1,4 @@
-package InterfaceGráfica.src.application;
+package application;
 
 //Representa uma dissipação de energia
 public class Amortecedor extends Peça{

@@ -1,4 +1,4 @@
-package InterfaceGráfica.src.application;
+package application;
 
 //Representa uma guardo de energia
 public class Mola extends Peça{
