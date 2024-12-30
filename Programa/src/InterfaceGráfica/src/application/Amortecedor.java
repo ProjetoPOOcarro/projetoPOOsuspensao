@@ -6,8 +6,6 @@ public class Amortecedor extends Peça{
 	//Atributos
 	double ConstanteC;
 	
-	//teste
-	
 	//Construtor
     public Amortecedor(double ConstanteC) {
         this.ConstanteC = ConstanteC;
