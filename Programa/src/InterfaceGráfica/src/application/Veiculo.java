@@ -3,8 +3,8 @@ package application;
 public class Veiculo {
 	
 	// Atributos
-	String nome;
-	double velocidade;
-	SistemaDeSuspensao sistemadesuspensao;
+	private String nome;
+	private double velocidade;
+	private SistemaDeSuspensao sistemadesuspensao;
 	
 }

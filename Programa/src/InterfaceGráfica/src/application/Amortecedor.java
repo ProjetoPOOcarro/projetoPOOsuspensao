@@ -4,10 +4,10 @@ package application;
 public class Amortecedor extends Peça{
 
 	//Atributos
-	double ConstanteC;
+	private double ConstanteC;
 	
-	//Construtor
-    public Amortecedor(double ConstanteC) {
+	//Setter
+    public void setConstanteC(double ConstanteC) {
         this.ConstanteC = ConstanteC;
     }
     

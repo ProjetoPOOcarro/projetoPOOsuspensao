@@ -4,7 +4,7 @@ package application;
 public class Massa extends Peça{
 
 	//Atributos
-	double Posição;
+	private double Posição;
 	
 	//Getter
     public double getPosição() {

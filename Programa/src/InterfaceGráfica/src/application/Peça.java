@@ -4,7 +4,26 @@ package application;
 public class Peça {
 
 	//Atributos
-	String nome;
-	double massa;
+	private String Nome;
+	private double Massa;
+	
+	//Setter
+    public void setNome(String Nome) {
+        this.Nome = Nome;
+    }
+    
+    public void setMassa(double Massa) {
+        this.Massa = Massa;
+    }
+    
+    //Getter
+    public double getMassa() {
+        return Massa;
+    }
+    
+    public String getNome() {
+        return Nome;
+    }
+    
 	
 }

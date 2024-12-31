@@ -4,10 +4,10 @@ package application;
 public class Mola extends Peça{
 	
 	//Atributos
-	double ConstanteK;
+	private double ConstanteK;
 	
-	//Construtor
-    public Mola(double ConstanteK) {
+	//Setter
+    public void setConstanteK(double ConstanteK) {
         this.ConstanteK = ConstanteK;
     }
     

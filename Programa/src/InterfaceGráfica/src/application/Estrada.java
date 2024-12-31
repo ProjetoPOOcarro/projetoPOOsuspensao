@@ -3,7 +3,7 @@ package application;
 public class Estrada {
 
 	//Atributos
-	double Amplitude;
+	private double Amplitude;
 	
 	//Construtor
     public Estrada(double Amplitude) {
