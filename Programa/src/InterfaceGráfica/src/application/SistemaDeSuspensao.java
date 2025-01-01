@@ -78,10 +78,10 @@ public class SistemaDeSuspensao extends Application {
             RealMatrix OscilaçãoMatrix = new Array2DRowRealMatrix(new double[]{Oscilação[i]});
 
             // Método de Runge-Kutta de 4ª ordem
-            RealMatrix k1 = calculateDx(AMatrix, BMatrix, xMatrix, OscilaçãoMatrix);
-            RealMatrix k2 = calculateDx(AMatrix, BMatrix, xMatrix.add(k1.scalarMultiply(dt / 2)), OscilaçãoMatrix);
-            RealMatrix k3 = calculateDx(AMatrix, BMatrix, xMatrix.add(k2.scalarMultiply(dt / 2)), OscilaçãoMatrix);
-            RealMatrix k4 = calculateDx(AMatrix, BMatrix, xMatrix.add(k3.scalarMultiply(dt)), OscilaçãoMatrix);
+            RealMatrix k1 = CalcularDerivada(AMatrix, BMatrix, xMatrix, OscilaçãoMatrix);
+            RealMatrix k2 = CalcularDerivada(AMatrix, BMatrix, xMatrix.add(k1.scalarMultiply(dt / 2)), OscilaçãoMatrix);
+            RealMatrix k3 = CalcularDerivada(AMatrix, BMatrix, xMatrix.add(k2.scalarMultiply(dt / 2)), OscilaçãoMatrix);
+            RealMatrix k4 = CalcularDerivada(AMatrix, BMatrix, xMatrix.add(k3.scalarMultiply(dt)), OscilaçãoMatrix);
 
             RealMatrix dx = k1.add(k2.scalarMultiply(2)).add(k3.scalarMultiply(2)).add(k4).scalarMultiply(dt / 6);
 
@@ -103,15 +103,11 @@ public class SistemaDeSuspensao extends Application {
             if (DeslocamentoMAX_N_SUS < Deslocamento[i][1]) {
             	DeslocamentoMAX_N_SUS = Deslocamento[i][1];
             }
-            
         }
     }
-    
-    
-
     // Função para calcular dx/dt
-    private static RealMatrix calculateDx(RealMatrix A, RealMatrix B, RealMatrix x, RealMatrix u) {
-        return A.multiply(x).add(B.multiply(u));
+    private static RealMatrix CalcularDerivada(RealMatrix A, RealMatrix B, RealMatrix x, RealMatrix Oscilação) {
+        return A.multiply(x).add(B.multiply(Oscilação));
     }
 
 }
