@@ -13,7 +13,7 @@ class PrimeiraTela {
     Simulador simulador = new Simulador();
 
 
-    public Scene criarCena(Stage primaryStage) {
+    public Scene criarCena(Stage primeriaTela) {
         Pane painel = new Pane();
         Label titulo = new Label("|SIMULADOR DE UM QUARTO DE SUSPENSÃO VEICULAR |");
         titulo.setStyle("-fx-font-size: 20px; -fx-font-family: 'Arial';");
@@ -35,31 +35,36 @@ class PrimeiraTela {
             botoes[i] = new Button("Ok");
             botoes[i].setLayoutX(450);
             botoes[i].setLayoutY(56 + i * 40);
-            configurarBotao(i, primaryStage);
+            configurarBotao(i, primeriaTela);
 
             painel.getChildren().addAll(textoCaixa, caixasDeTexto[i], botoes[i]);
         }
         return new Scene(painel, 580, 360);
     }
 
-    private void configurarBotao(int aux, Stage primaryStage) {
+    private void configurarBotao(int aux, Stage primeriaTela) {
         botoes[aux].setOnAction(event -> {
             try {
                 double valor = Double.parseDouble(caixasDeTexto[aux].getText());
-                simulador.atribuirValor(aux, valor);
-                caixasDeTexto[aux].setStyle("-fx-border-color: green;");
                 if (simulador.todosValoresDefinidos()) {
                 	configurarVariáveis();
-                    primaryStage.close();
-                    simulador.abrirSegundaTela(primaryStage);
+                	primeriaTela.close();
+                    simulador.abrirSegundaTela();
                 }
-            } catch (NumberFormatException erro) {
+                if(valor<=0) {
+                	caixasDeTexto[aux].setStyle("-fx-border-color: red;");
+                }
+                else {
+                	 simulador.atribuirValor(aux, valor);
+                     caixasDeTexto[aux].setStyle("-fx-border-color: green;");
+                }
+            } 
+            catch (NumberFormatException erro) {
                 caixasDeTexto[aux].setStyle("-fx-border-color: red;");
             }
         });
     }
     private void configurarVariáveis() {
-    	Amortecedor ConstanteC = new Amortecedor();
-    	ConstanteC.setAmortecedor();
+    	
     }
 }
