@@ -1,6 +1,3 @@
-//Antes de usar
-//(tirar do comentario): 21 - 30, 77, 108, 110, 
-//(deixar comentado):  41-49, 76, 113(opcional)
 package application;
 
 import org.apache.commons.math3.linear.*;
