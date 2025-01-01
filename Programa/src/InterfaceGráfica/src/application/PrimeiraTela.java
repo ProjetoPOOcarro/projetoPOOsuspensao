@@ -12,10 +12,9 @@ class PrimeiraTela {
     private Button[] botoes = new Button[5];
     Simulador simulador = new Simulador();
 
-
     public Scene criarCena(Stage primeriaTela) {
         Pane painel = new Pane();
-        Label titulo = new Label("|SIMULADOR DE UM QUARTO DE SUSPENSÃO VEICULAR |");
+        Label titulo = new Label("|SIMULADOR DE UM QUARTO DE SUSPENSÃO VEICULAR|");
         titulo.setStyle("-fx-font-size: 20px; -fx-font-family: 'Arial';");
         titulo.setLayoutX(10);
         titulo.setLayoutY(10);
@@ -65,6 +64,19 @@ class PrimeiraTela {
         });
     }
     private void configurarVariáveis() {
+    	double valor;
+    	Mola ConstanteK = new Mola();
+    	valor = Simulador.getValores(0);
+    	ConstanteK.setConstanteK(valor);
+    	
+    	
+    	Peça MassaNsus = new Peça();
+    	valor = Simulador.getValores(2);
+    	MassaNsus.setMassa(valor);
+    	
+    	Amortecedor ConstanteC = new Amortecedor();
+    	valor = Simulador.getValores(3);
+    	ConstanteC.setConstanteC(valor);
     	
     }
 }
