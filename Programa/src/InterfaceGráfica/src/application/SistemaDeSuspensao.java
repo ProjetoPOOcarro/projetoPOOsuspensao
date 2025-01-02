@@ -26,6 +26,15 @@ public class SistemaDeSuspensao extends Application {
     double dt = 0.01; // Passo de tempo (s)
     int steps = 500; // Número de passos (5 s com passo de 0,01 s)
     
+    //Setta os parametros do sistema de suspensão
+    public void setParametros(Amortecedor Amortecedor, Mola MolaSuspensao, Mola MolaPneu, Massa MassaSuspensa, Massa MassaNaoSuspensa) {
+        this.Amortecedor = Amortecedor;
+        this.MolaSuspensao = MolaSuspensao;
+        this.MolaPneu = MolaPneu;
+        this.MassaSuspensa = MassaSuspensa;
+        this.MassaNaoSuspensa = MassaNaoSuspensa;
+    }
+
     public static void main(String[] args) {
         // Lançando a aplicação JavaFX
         launch(args);
