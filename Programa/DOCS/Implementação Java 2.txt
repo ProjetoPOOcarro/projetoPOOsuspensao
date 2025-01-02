@@ -1,0 +1,151 @@
+-- Implementação Java 2 - A PARTIR DA CLASSE EXISTENTE "SistemaDeSuspensao.java": (Sugestão GPT)
+
+
+public class SistemaDeSuspensao {
+    // Matrizes do Espaço de Estados
+    private double[][] A;
+    private double[][] B;
+    private double[][] C;
+    private double[][] D;
+
+    // Estado Inicial
+    private double[][] x;
+
+    // Construtor
+    public SistemaDeSuspensao(double[][] A, double[][] B, double[][] C, double[][] D, double[][] x0) {
+        this.A = A;
+        this.B = B;
+        this.C = C;
+        this.D = D;
+        this.x = x0; // Estado inicial
+    }
+
+    // Método para calcular aceleração da massa suspensa (x''_s)
+    public double calcularAceleracaoMassaSuspensa(double[][] u) {
+        // A aceleração é a segunda derivada do deslocamento da massa suspensa, encontrada no estado
+        // Equação: x''_s = dx[1] / dt = A[1]*x + B[1]*u
+        double[][] dx = somar(multiplicar(A, x), multiplicar(B, u));
+        return dx[1][0]; // A aceleração está no índice 1 (dado o modelo de espaço de estados)
+    }
+
+    // Método para calcular deslocamento relativo (x_u - x_s)
+    public double calcularDeslocamentoRelativo() {
+        // x_u - x_s = x[2] - x[0] (massa não suspensa menos massa suspensa)
+        return x[2][0] - x[0][0];
+    }
+
+    // Método para simular o sistema no tempo
+    public double[][] simular(double[] u, double[] t) {
+        int estados = A.length;          // Número de estados
+        int passos = t.length;          // Número de passos de tempo
+        double[][] y = new double[passos][C.length]; // Armazena saídas (deslocamentos)
+
+        for (int i = 0; i < passos - 1; i++) {
+            double dt = t[i + 1] - t[i]; // Passo de tempo
+
+            // Calcular dx/dt = A*x + B*u
+            double[][] dx = somar(multiplicar(A, x), multiplicar(B, new double[][]{{u[i]}}));
+
+            // Atualizar o estado: x(t+1) = x(t) + dx*dt
+            x = somar(x, escalar(dx, dt));
+
+            // Calcular a saída: y(t) = C*x + D*u
+            double[][] yAtual = somar(multiplicar(C, x), multiplicar(D, new double[][]{{u[i]}}));
+
+            // Armazenar a saída no tempo atual
+            for (int j = 0; j < C.length; j++) {
+                y[i][j] = yAtual[j][0];
+            }
+        }
+
+        return y; // Retorna deslocamentos
+    }
+
+    // Operações Matriciais (multiplicar, somar, escalar)
+    private double[][] multiplicar(double[][] m1, double[][] m2) {
+        int linhas = m1.length;
+        int colunas = m2[0].length;
+        int comum = m1[0].length;
+        double[][] resultado = new double[linhas][colunas];
+
+        for (int i = 0; i < linhas; i++) {
+            for (int j = 0; j < colunas; j++) {
+                for (int k = 0; k < comum; k++) {
+                    resultado[i][j] += m1[i][k] * m2[k][j];
+                }
+            }
+        }
+        return resultado;
+    }
+
+    private double[][] somar(double[][] m1, double[][] m2) {
+        int linhas = m1.length;
+        int colunas = m1[0].length;
+        double[][] resultado = new double[linhas][colunas];
+
+        for (int i = 0; i < linhas; i++) {
+            for (int j = 0; j < colunas; j++) {
+                resultado[i][j] = m1[i][j] + m2[i][j];
+            }
+        }
+        return resultado;
+    }
+
+    private double[][] escalar(double[][] matriz, double escalar) {
+        int linhas = matriz.length;
+        int colunas = matriz[0].length;
+        double[][] resultado = new double[linhas][colunas];
+
+        for (int i = 0; i < linhas; i++) {
+            for (int j = 0; j < colunas; j++) {
+                resultado[i][j] = matriz[i][j] * escalar;
+            }
+        }
+        return resultado;
+    }
+}
+
+
+MAIN:
+
+public static void main(String[] args) {
+    // Matrizes do sistema
+    double[][] A = { ... }; // Matriz A
+    double[][] B = { ... }; // Matriz B
+    double[][] C = { ... }; // Matriz C
+    double[][] D = { ... }; // Matriz D
+    double[][] x0 = { {0}, {0}, {0}, {0} }; // Estado inicial
+
+    // Configurar o sistema
+    SistemaDeSuspensao sistema = new SistemaDeSuspensao(A, B, C, D, x0);
+
+    // Tempo e entrada
+    double[] t = new double[501]; // 0 a 5 segundos com passo 0.01 s
+    for (int i = 0; i < t.length; i++) {
+        t[i] = i * 0.01;
+    }
+
+    double[] u = new double[t.length]; // Excitação senoidal
+    for (int i = 0; i < u.length; i++) {
+        u[i] = 0.1 * Math.sin(2 * Math.PI * t[i]);
+    }
+
+    // Simular o sistema
+    double[][] resultados = sistema.simular(u, t);
+
+    // Calcular aceleração e deslocamento relativo
+    for (int i = 0; i < t.length; i++) {
+        double aceleracao = sistema.calcularAceleracaoMassaSuspensa(new double[][]{{u[i]}});
+        double deslocamentoRelativo = sistema.calcularDeslocamentoRelativo();
+        System.out.printf("t: %.2f, Aceleração: %.4f, Deslocamento Relativo: %.4f%n",
+                          t[i], aceleracao, deslocamentoRelativo);
+    }
+}
+
+
+Resultado Esperado
+Este código:
+
+Calcula a aceleração da massa suspensa e o deslocamento relativo para cada instante de tempo.
+Realiza a simulação do sistema no domínio do tempo.
+Permite visualizar os dados em gráficos ou logs.
