@@ -1,50 +1,47 @@
 package application;
 
 import org.apache.commons.math3.linear.*;
-import javafx.application.Application;
-import javafx.stage.Stage;
 
-public class SistemaDeSuspensao extends Application {
-	
-	Amortecedor Amortecedor;
-	Mola MolaSuspensao;
-	Mola MolaPneu;
-	Massa MassaSuspensa;
-	Massa MassaNaoSuspensa;
-	Estrada Estrada;
-	double DeslocamentoMAX_SUS;
-	double DeslocamentoMAX_N_SUS;
-	
-	//Deixei as siglas para auxiliar nos cálculos
+public class SistemaDeSuspensao {
 
-	double m_s = MassaSuspensa.getMassa(); // Massa suspensa (kg)
-    double m_u = MassaNaoSuspensa.getMassa();  // Massa não suspensa (kg)
-    double k_s = MolaSuspensao.getConstanteK(); // Rigidez da suspensão (N/m)
-    double k_t = MolaPneu.getConstanteK(); // Rigidez do pneu (N/m)
-    double c_s = Amortecedor.getConstanteC(); // Amortecimento da suspensão (Ns/m)
-    double A_sin = Estrada.getAmplitude(); //Amplitude da estrada
+    Amortecedor Amortecedor;
+    Mola MolaSuspensao;
+    Mola MolaPneu;
+    Massa MassaSuspensa;
+    Massa MassaNaoSuspensa;
+    Estrada Estrada;
+    private double DeslocamentoMAX_SUS = 0;
+    private double DeslocamentoMAX_N_SUS = 0;
+
+    // Deixei as siglas para auxiliar nos cálculos
+    double m_s;
+    double m_u;
+    double k_s;
+    double k_t;
+    double c_s;
+    double A_sin;
     double dt = 0.01; // Passo de tempo (s)
     int steps = 500; // Número de passos (5 s com passo de 0,01 s)
-    
-    //Setta os parametros do sistema de suspensão
-    public void setParametros(Amortecedor Amortecedor, Mola MolaSuspensao, Mola MolaPneu, Massa MassaSuspensa, Massa MassaNaoSuspensa) {
+
+    // Seta os parâmetros do sistema de suspensão
+    public void setParametros(Amortecedor Amortecedor, Mola MolaSuspensao, Mola MolaPneu, Massa MassaSuspensa, Massa MassaNaoSuspensa, Estrada Estrada) {
         this.Amortecedor = Amortecedor;
         this.MolaSuspensao = MolaSuspensao;
         this.MolaPneu = MolaPneu;
         this.MassaSuspensa = MassaSuspensa;
         this.MassaNaoSuspensa = MassaNaoSuspensa;
+        this.Estrada = Estrada;
+
+        // Inicializa os valores com base nos objetos fornecidos
+        this.m_s = MassaSuspensa.getMassa();
+        this.m_u = MassaNaoSuspensa.getMassa();
+        this.k_s = MolaSuspensao.getConstanteK();
+        this.k_t = MolaPneu.getConstanteK();
+        this.c_s = Amortecedor.getConstanteC();
+        this.A_sin = Estrada.getAmplitude();
     }
 
-    public static void main(String[] args) {
-        // Lançando a aplicação JavaFX
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage stage) {
-
-
-        // Matrizes do espaço de estados
+    public void Calcular() {
         double[][] A = {
                 {0, 1, 0, 0},
                 {-k_s / m_s, -c_s / m_s, k_s / m_s, c_s / m_s},
@@ -62,7 +59,6 @@ public class SistemaDeSuspensao extends Application {
                 {0, 0, 1, 0}
         };
 
-        // Vetores de tempo e entrada
         double[] Tempo = new double[steps];
         double[] Oscilação = new double[steps];
         for (int i = 0; i < steps; i++) {
@@ -70,11 +66,9 @@ public class SistemaDeSuspensao extends Application {
             Oscilação[i] = Estrada.OscilacaoEstrada(Tempo[i]);
         }
 
-        // Estado inicial
         double[] x = {0, 0, 0, 0};
         double[][] Deslocamento = new double[steps][2];
 
-        // Simulação (Método de Runge-Kutta de 4ª ordem)
         RealMatrix AMatrix = new Array2DRowRealMatrix(A);
         RealMatrix BMatrix = new Array2DRowRealMatrix(B);
         RealMatrix CMatrix = new Array2DRowRealMatrix(C);
@@ -83,7 +77,6 @@ public class SistemaDeSuspensao extends Application {
             RealMatrix xMatrix = new Array2DRowRealMatrix(x);
             RealMatrix OscilaçãoMatrix = new Array2DRowRealMatrix(new double[]{Oscilação[i]});
 
-            // Método de Runge-Kutta de 4ª ordem
             RealMatrix k1 = CalcularDerivada(AMatrix, BMatrix, xMatrix, OscilaçãoMatrix);
             RealMatrix k2 = CalcularDerivada(AMatrix, BMatrix, xMatrix.add(k1.scalarMultiply(dt / 2)), OscilaçãoMatrix);
             RealMatrix k3 = CalcularDerivada(AMatrix, BMatrix, xMatrix.add(k2.scalarMultiply(dt / 2)), OscilaçãoMatrix);
@@ -91,29 +84,43 @@ public class SistemaDeSuspensao extends Application {
 
             RealMatrix dx = k1.add(k2.scalarMultiply(2)).add(k3.scalarMultiply(2)).add(k4).scalarMultiply(dt / 6);
 
-            // Atualiza o estado
             x = xMatrix.add(dx).getColumn(0);
 
-            // Saída
             RealMatrix DeslocamentoMatrix = CMatrix.multiply(new Array2DRowRealMatrix(x));
-            
-            Deslocamento[i][0] = DeslocamentoMatrix.getEntry(0, 0); // Deslocamento da massa suspensa
+
+            Deslocamento[i][0] = DeslocamentoMatrix.getEntry(0, 0);
             MassaSuspensa.setPosição(Deslocamento[i][0]);
-            Deslocamento[i][1] = DeslocamentoMatrix.getEntry(1, 0); // Deslocamento da massa não suspensa
+            Deslocamento[i][1] = DeslocamentoMatrix.getEntry(1, 0);
             MassaNaoSuspensa.setPosição(Deslocamento[i][1]);
 
-            if (DeslocamentoMAX_SUS < Deslocamento[i][0]){
-            	DeslocamentoMAX_SUS = Deslocamento[i][0];
+            if (getDeslocamentoMAX_SUS() < Deslocamento[i][0]) {
+            	setDeslocamentoMAX_SUS(Deslocamento[i][0]);
             }
-            
-            if (DeslocamentoMAX_N_SUS < Deslocamento[i][1]) {
-            	DeslocamentoMAX_N_SUS = Deslocamento[i][1];
+
+            if (getDeslocamentoMAX_N_SUS() < Deslocamento[i][1]) {
+            	setDeslocamentoMAX_N_SUS(Deslocamento[i][1]);
             }
         }
     }
-    // Função para calcular dx/dt
+
     private static RealMatrix CalcularDerivada(RealMatrix A, RealMatrix B, RealMatrix x, RealMatrix Oscilação) {
         return A.multiply(x).add(B.multiply(Oscilação));
     }
-
+    
+    //Getter do Deslocamento Maximo da massa suspensa
+    public double getDeslocamentoMAX_SUS() {
+        return DeslocamentoMAX_SUS;
+    }
+    //Setter do Deslocamento Maximo da massa suspensa
+    public void setDeslocamentoMAX_SUS(double deslocamentoMAX_SUS) {
+        this.DeslocamentoMAX_SUS = deslocamentoMAX_SUS;
+    }
+    //Getter do Deslocamento Maximo da massa não suspensa
+    public double getDeslocamentoMAX_N_SUS() {
+        return DeslocamentoMAX_N_SUS;
+    }
+    //Setter do Deslocamento Maximo da massa não suspensa
+    public void setDeslocamentoMAX_N_SUS(double deslocamentoMAX_N_SUS) {
+        this.DeslocamentoMAX_N_SUS = deslocamentoMAX_N_SUS;
+    }
 }
