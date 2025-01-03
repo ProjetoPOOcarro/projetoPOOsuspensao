@@ -1,0 +1,13 @@
+Interoperabilidade MATLAB e JAVA:
+
+Temos três possíveis maneiras para integrar, ou exportar, dados de um software com/para o outro.
+
+- Para flexibilidade e simplicidade, o jeito é exportar arquivos CSV/JSON.
+	Este método é o ÚNICO que não requer que o MATLAB esteja instalado na máquina de quem for rodar o programa, porém ele apenas exporta os RESULTADOS que forem calculados no MATLAB, o cálculo não seria feito em tempo real pelo JAVA.
+
+- Para integração em tempo real e interação direta com o MATLAB, tem o MATLAB Engine for Java.
+	Tem que ter o MATLAB na máquina.
+Para implantação de alto desempenho, o MATLAB Coder com integração JNI.
+	Tem que ter o MATLAB na máquina (só inicialmente), basicamente através de Um Coder do MATLAB tu transforma a função em C e, teoricamente, conseguiria exportar ao Java.
+
+Outras opções seriam realizar o cálculo "manual" através da IDE JAVA.

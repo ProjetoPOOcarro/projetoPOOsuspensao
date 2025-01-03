@@ -1,0 +1,75 @@
+-- Pontos passíveis de melhorias (analisar e implementar se acharem necessário):
+
+-> Na classe "Peça.java", dá para encapsular (private - daí teria que mudar no UML):
+
+public abstract class Peça {
+    private String nome;
+    private double massa;
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public double getMassa() {
+        return massa;
+    }
+
+    public void setMassa(double massa) {
+        this.massa = massa;
+    }
+}
+
+-> Na classe "Simulador.java" dá para encapsular:
+
+private static String[] textos = { ... };
+private static double[] valores = new double[5];
+
+public static String getTexto(int aux) {
+    return textos[aux];
+}
+
+public static double getValor(int aux) {
+    return valores[aux];
+}
+
+-> Acho interessante acrescentar, na Interface, validações mais específicas para evitar inconsistências nos cálculos (atualmente só é verificado se o valor digitado é um número)
+-- Exemplo:
+- Massa e constantes de mola não podem ser negativas ou zero.
+- Coeficiente de amortecimento deve ser positivo.
+-- Sugestão do GPT:
+
+try {
+    double valor = Double.parseDouble(caixasDeTexto[aux].getText());
+    if (valor <= 0) {
+        throw new IllegalArgumentException("O valor deve ser maior que zero.");
+    }
+    simulador.atribuirValor(aux, valor);
+    caixasDeTexto[aux].setStyle("-fx-border-color: green;");
+} catch (NumberFormatException | IllegalArgumentException erro) {
+    caixasDeTexto[aux].setStyle("-fx-border-color: red;");
+}
+
+-> Na classe "animação.java" o GPT sugeriu:
+
+public void atualizarDeslocamento(double deslocamentoY) {
+    translateY.setByY(deslocamentoY); // Atualizar com o valor calculado
+    translateY.play();
+}
+
+Para sincronização de movimentos (talvez irrelevante).
+
+-> Mais uma firula, adicionar mensagens que informem o status da simulação, como (ALERT):
+
+import javafx.scene.control.Alert;
+
+public void mostrarMensagem(String titulo, String mensagem) {
+    Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+    alerta.setTitle(titulo);
+    alerta.setHeaderText(null);
+    alerta.setContentText(mensagem);
+    alerta.showAndWait();
+}
