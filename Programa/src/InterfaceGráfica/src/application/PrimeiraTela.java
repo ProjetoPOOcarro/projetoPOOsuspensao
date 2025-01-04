@@ -8,18 +8,45 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 class PrimeiraTela {
+	private double valor;
+	private boolean importar = false;
     private TextField[] caixasDeTexto = new TextField[5];
     private Button[] botoes = new Button[5];
+    private Button botão = new Button();
+    private Button botãoS = new Button();
+    private Button botãoN = new Button();
     Simulador simulador = new Simulador();
-
+    Pane painel = new Pane();
+    
     public Scene criarCena(Stage primeriaTela) {
-        Pane painel = new Pane();
         Label titulo = new Label("|SIMULADOR DE UM QUARTO DE SUSPENSÃO VEICULAR|");
         titulo.setStyle("-fx-font-size: 20px; -fx-font-family: 'Arial';");
         titulo.setLayoutX(10);
         titulo.setLayoutY(10);
         painel.getChildren().add(titulo);
-
+        
+        botão = new Button("Sim");
+        botão.setLayoutX(450);
+        botão.setLayoutY(300);
+        
+        botãoS = new Button("Sim");
+        botãoS.setLayoutX(450);
+        botãoS.setLayoutY(260);
+        
+        botãoN = new Button("Não");
+        botãoN.setLayoutX(410);
+        botãoN.setLayoutY(260);
+        
+        Label textoR = new Label("Você deseja importar um arquivo com os dados?");
+        textoR.setStyle("-fx-font-size: 15px; -fx-font-family: 'Arial';");
+        textoR.setLayoutX(20);
+        textoR.setLayoutY(305);
+        
+        Label textoB = new Label("Você deseja salvar esses dados em um arquivo?");
+        textoB.setStyle("-fx-font-size: 15px; -fx-font-family: 'Arial';");
+        textoB.setLayoutX(20);
+        textoB.setLayoutY(260);
+        
         for (int i = 0; i < 5; i++) {
         	int aux=i;
             Label textoCaixa = new Label(Simulador.getTexto(aux));
@@ -38,18 +65,14 @@ class PrimeiraTela {
 
             painel.getChildren().addAll(textoCaixa, caixasDeTexto[i], botoes[i]);
         }
+        painel.getChildren().addAll(botão,textoR,botãoS,botãoN,textoB);
         return new Scene(painel, 580, 360);
     }
 
     private void configurarBotao(int aux, Stage primeriaTela) {
-        botoes[aux].setOnAction(event -> {
+    	botoes[aux].setOnAction(event -> {
             try {
-                double valor = Double.parseDouble(caixasDeTexto[aux].getText());
-                if (simulador.todosValoresDefinidos()) {
-                	configurarVariáveis();
-                	primeriaTela.close();
-                    simulador.abrirSegundaTela();
-                }
+                valor = Double.parseDouble(caixasDeTexto[aux].getText());
                 if(valor<=0) {
                 	caixasDeTexto[aux].setStyle("-fx-border-color: red;");
                 }
@@ -62,21 +85,18 @@ class PrimeiraTela {
                 caixasDeTexto[aux].setStyle("-fx-border-color: red;");
             }
         });
-    }
-    private void configurarVariáveis() {
-    	double valor;
-    	Mola ConstanteK = new Mola();
-    	valor = Simulador.getValores(0);
-    	ConstanteK.setConstanteK(valor);
-    	
-    	
-    	Peça MassaNsus = new Peça();
-    	valor = Simulador.getValores(2);
-    	MassaNsus.setMassa(valor);
-    	
-    	Amortecedor ConstanteC = new Amortecedor();
-    	valor = Simulador.getValores(3);
-    	ConstanteC.setConstanteC(valor);
-    	
+        botão.setOnAction(event->{
+        	primeriaTela.close();
+        	simulador.abrirTelaDeImportação(importar);
+        });
+        botãoS.setOnAction(event->{
+        	importar = true;
+        	primeriaTela.close();
+        	simulador.abrirTelaDeImportação(importar);
+        });
+        botãoN.setOnAction(event->{
+        	primeriaTela.close();
+        	simulador.abrirSegundaTela();
+        });
     }
 }
