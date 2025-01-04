@@ -9,7 +9,7 @@ import java.io.FileReader;
 public class Projeto {
 
     private String Nome;
-
+    Simulador simulador = new Simulador();
     public Projeto(String nome) {
         this.Nome = nome;
     }
@@ -88,4 +88,3 @@ public class Projeto {
     }
 
 }
-
