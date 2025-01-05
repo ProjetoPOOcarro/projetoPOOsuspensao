@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Simulador {
+	private int contador = 0;
     private static String[] Textos = {
         "Digite o valor da rigidez da suspensão (N/m):",
         "Digite o valor da massa suspensa (kg):",
@@ -19,6 +20,7 @@ public class Simulador {
     	 //2 valor da massa não suspensa(Kg),3 o coeficiente de amortecimento (Cs),
     	 //4 a rigidez do pneu (Kt)
     	valores[aux] = valor;
+    	contador++;
     }
     public void atribuirValoresImportados(String nome) {
     	Projeto valor = new Projeto(nome);
@@ -30,14 +32,11 @@ public class Simulador {
     	valor.SalvarDados(valores[0],valores[1],valores[2],valores[3],valores[4]);
     	abrirSegundaTela();
     }
+    public boolean TodosOsValoresPreenchidos() {
+    	return contador == 5;
+    }
 
     public void abrirSegundaTela() {
-    	System.out.println(valores[0]);
-    	System.out.println(valores[1]);
-    	System.out.println(valores[2]);
-    	System.out.println(valores[3]);
-    	System.out.println(valores[4]);
-    	
     	Mola molaSuspensao = new Mola(); // Usa o valor de rigidez da suspensão
     	molaSuspensao.setConstanteK(valores[0]);
    
@@ -64,10 +63,6 @@ public class Simulador {
         sistema.Calcular();
         Vmax=sistema.getDeslocamentoMAX_SUS();
         Vmin=sistema.getDeslocamentoMAX_N_SUS();
-        System.out.println("Vmax=");
-        System.out.println(Vmax);
-        System.out.println("Vmin=");
-        System.out.println(Vmin);
      
         Stage animação = new Stage();
     	animação simulador = new animação();
@@ -77,25 +72,42 @@ public class Simulador {
         animação.setResizable(false); // Desativa o redimensionamento
         animação.show();
         animação.setX(100);
-        animação.setY(100);
+        animação.setY(0);
         
         Stage gráfico1 = new Stage();
         Gráficos dados = new Gráficos();
-        Scene cena3 = dados.CriarGráfico1();
+        Scene cena3 = dados.CriarGráfico1(sistema);
         gráfico1.setTitle("Grafico1");
         gráfico1.setScene(cena3);
         gráfico1.setResizable(false); // Desativa o redimensionamento
         gráfico1.show();
         
         gráfico1.setX(681);
-        gráfico1.setY(100);
+        gráfico1.setY(0);
+        
+        Stage gráfico2 = new Stage();
+        Gráficos dados2 = new Gráficos();
+        Scene cena4 = dados2.CriarGráfico2(sistema);
+        gráfico2.setTitle("Grafico2");
+        gráfico2.setScene(cena4);
+        gráfico2.setResizable(false); // Desativa o redimensionamento
+        gráfico2.show();
+        
+        gráfico2.setX(100);
+        gráfico2.setY(350);
+        
+        Stage gráfico3 = new Stage();
+        Gráficos dados3 = new Gráficos();
+        Scene cena5 = dados3.CriarGráfico3(sistema);
+        gráfico3.setTitle("Grafico3");
+        gráfico3.setScene(cena5);
+        gráfico3.setResizable(false); // Desativa o redimensionamento
+        gráfico3.show();
+        
+        gráfico3.setX(681);
+        gráfico3.setY(401);
     }
     public void abrirTelaDeImportação(boolean importar) {
-    	System.out.println(valores[0]);
-    	System.out.println(valores[1]);
-    	System.out.println(valores[2]);
-    	System.out.println(valores[3]);
-    	System.out.println(valores[4]);
     	ImportaçãoDeArquivos simulador = new ImportaçãoDeArquivos();
         Scene cena2 = simulador.criarTelaDeImportarArquivo(importar);
         Importar.setTitle("Simulador de um quarto de suspensão veicular");
