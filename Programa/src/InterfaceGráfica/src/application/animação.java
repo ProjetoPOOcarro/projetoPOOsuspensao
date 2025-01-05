@@ -76,8 +76,8 @@ public class animação {
         TranslateTransition translateY2 = new TranslateTransition();
         translateY2.setNode(grupo1);
         translateY2.setDuration(Duration.seconds(2)); // Duração de 1 segundo
-        translateY2.setFromY(-Vmax*10);
-        translateY2.setToY(Vmin*10);
+        translateY2.setFromY(Vmax*15);
+        translateY2.setToY(-Vmin*15);
         translateY2.setCycleCount(TranslateTransition.INDEFINITE); // Repetir indefinidamente
         translateY2.setAutoReverse(true); // Reverter automaticamente
         translateY2.play();
@@ -100,18 +100,6 @@ public class animação {
         	Conforto = new Text(10, 20, "Faixa não idela Para conforto");
         	Conforto.setFill(Color.BLACK);
         }
-        // Criar um Text para exibir a posição Y do carro
-
-        // Usar um Timeline para atualizar a posição Y em tempo real
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.5), e -> {
-            // Atualizar a posição Y do carro com base no deslocamento de translateY
-            deslocamentoY = grupo1.getTranslateY();
-            Gráficos.setDados(deslocamentoY);
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-
-        // Adicionar o texto à cena
         painel.getChildren().add(Conforto);
 
         Scene cena = new Scene(painel, 580, 320);
