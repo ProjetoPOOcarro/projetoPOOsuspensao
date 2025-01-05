@@ -96,12 +96,7 @@ public class SistemaDeSuspensao {
             RealMatrix dx = k1.add(k2.scalarMultiply(2)).add(k3.scalarMultiply(2)).add(k4).scalarMultiply(dt / 6);
 
             x = xMatrix.add(dx).getColumn(0);
-            
-            System.out.println("b");
-            for (int c = 0; c < x.length; c++) {
-                System.out.println(x[c]); 
-            System.out.println("a");// Imprime cada elemento do array
-            }
+           
             
             RealMatrix DeslocamentoMatrix = CMatrix.multiply(new Array2DRowRealMatrix(x));
 
@@ -116,9 +111,24 @@ public class SistemaDeSuspensao {
             setINF_SISTEMA_SUSPENSAO_Diferença_Desl(i, Deslocamento[i][1]-Deslocamento[i][0]);
             
             
+         // Derivadas de posição: as velocidades são as derivadas da posição
+            double dx0_dt = x[1];  // Velocidade da massa suspensa
+            double dx2_dt = x[3];  // Velocidade da massa não suspensa
+
+            // Derivadas de velocidade (aceleração):
+            double dx1_dt = (k_s * (x[2] - x[0]) + c_s * (x[3] - x[1])) / m_s;  // Aceleração da massa suspensa
+            double dx3_dt = (k_t * (x[2] - x[0]) - k_s * (x[2] - x[0]) - c_s * (x[1] - x[3])) / m_u;  // Aceleração da massa não suspensa
 
             
-            double acel = (k_s * (x[2] - x[0]) + c_s * (x[3] - x[2])) / m_s;
+            
+            // Agora você tem as acelerações diretamente, e pode aplicar Runge-Kutta para atualizar as variáveis de estado
+            //System.out.printf("%f\n", Deslocamento[i][1]);
+            //System.out.printf("%f\n", Deslocamento[i][0]);
+            //System.out.printf("%f\n", dx2_dt);
+            //System.out.printf("%f\n", dx0_dt);
+            //System.out.printf("%f\n", dx1_dt);
+            
+            double acel = (k_s * (Deslocamento[i][1] - Deslocamento[i][0]) + c_s * (x[3] - x[1])) / m_s;
             
             setINF_SISTEMA_SUSPENSAO_Aceleracao_Sus(i, acel);
             
@@ -192,7 +202,7 @@ public class SistemaDeSuspensao {
         return this.INF_SISTEMA_SUSPENSAO[passo][4];
     }
     
-    /*
+    
     public static void main(String[] args) {
         Amortecedor amortecedor = new Amortecedor();
         amortecedor.setConstanteC(1000);
@@ -203,7 +213,7 @@ public class SistemaDeSuspensao {
         Massa massaSuspensa = new Massa();
         massaSuspensa.setMassa(250);
         Massa massaNaoSuspensa = new Massa();
-        massaNaoSuspensa.setMassa(5);
+        massaNaoSuspensa.setMassa(50);
         Estrada estrada = new Estrada(0.1);
 
         SistemaDeSuspensao sis = new SistemaDeSuspensao();
@@ -211,16 +221,15 @@ public class SistemaDeSuspensao {
 
         sis.Calcular();
 
-        System.out.printf(" \n%.3f", sis.getDeslocamentoMAX_N_SUS());
 
         // Altere o limite do laço de 1000 para 999 para garantir que não ultrapasse o índice máximo
         for (int i = 0; i < 1000; i++) {
-            System.out.printf("\nTempo: %.3f", sis.getINF_SISTEMA_SUSPENSAO_Tempo(i));
+            //System.out.printf("\nTempo: %.3f", sis.getINF_SISTEMA_SUSPENSAO_Tempo(i));
            // System.out.printf("***%.3f", sis.getINF_SISTEMA_SUSPENSAO_Desl_Massa_Sus(i));
             //System.out.printf("***%.3f", sis.getINF_SISTEMA_SUSPENSAO_Desl_Massa_N_Sus(i));
             //System.out.printf("***%.3f", sis.getINF_SISTEMA_SUSPENSAO_Diferença_Desl(i));
-            System.out.printf(" Aceleração: %.3f", sis.getINF_SISTEMA_SUSPENSAO_Aceleracao_Sus(i));
+            //System.out.printf("%f\n", sis.getINF_SISTEMA_SUSPENSAO_Aceleracao_Sus(i));
         }
     }
-    */
+    
 }
