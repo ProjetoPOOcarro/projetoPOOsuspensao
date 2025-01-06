@@ -1,29 +1,19 @@
 package application;
-
-//Classe abstrata que servirá de base para outras
+/*
+ * - Classe abstrata que servirá de base para outras peças do sistema(massa, mola e amortecedor)
+ */
 public class Peça {
 
-	//Atributos
-	private String Nome;
+	//------Atributos------
 	private double Massa;
-	
+
+	//------Metodos------
 	//Setter
-    public void setNome(String Nome) {
-        this.Nome = Nome;
-    }
-    
     public void setMassa(double Massa) {
         this.Massa = Massa;
     }
-    
     //Getter
     public double getMassa() {
         return Massa;
     }
-    
-    public String getNome() {
-        return Nome;
-    }
-    
-	
 }

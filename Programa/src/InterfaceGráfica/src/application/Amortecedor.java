@@ -1,11 +1,15 @@
 package application;
-
-//Representa uma dissipação de energia
+/*
+ * - A classe amortecedor deriva da classe peça
+ * - Representa uma dissipição de energia
+ * - ConstanteC é a constante de amortecimento
+ */
 public class Amortecedor extends Peça{
 
-	//Atributos
+	//------Atributos------
 	private double ConstanteC;
 	
+	//------Metodos------
 	//Setter
     public void setConstanteC(double ConstanteC) {
         this.ConstanteC = ConstanteC;

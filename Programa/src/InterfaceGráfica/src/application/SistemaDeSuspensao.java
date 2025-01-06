@@ -1,31 +1,38 @@
 package application;
-
+/*
+ * - 
+ * - 
+ * - Classe simula um sistema de suspensão com massas, molas e um amortecedor percorrendo uma estrada
+ * - Foi adicionada a biblioteca APACHE para ajudar a resolver os cálculos deste programa
+ */
 import org.apache.commons.math3.linear.*;
 
 public class SistemaDeSuspensao {
 
+	//------Atributos------
+	
+	//Peças do sistema de suspensão
     Amortecedor Amortecedor;
     Mola MolaSuspensao;
     Mola MolaPneu;
     Massa MassaSuspensa;
     Massa MassaNaoSuspensa;
     Estrada Estrada;
+    
+    //Atributos de saída do sistema
     private double DeslocamentoMAX_SUS = 0;
     private double DeslocamentoMAX_N_SUS = 0;
     private double PICO_ACELERACAO = 0;
     private double RMS_ACELERACAO;
-    double soma_acel;
-
-    // Deixei as siglas para auxiliar nos cálculos
-    double m_s;
-    double m_u;
-    double k_s;
-    double k_t;
-    double c_s;
-    double A_sin;
-    double dt = 0.01; // Passo de tempo (s)
-    int passo = 1000; // Número de passos (5 s com passo de 0,01 s)
     
+    //Atributos que ajudam nos cálculos
+    double soma_acel;
+    double dt = 0.01;//Passo de tempo (s)
+    int passo = 1000;//Número de passos
+    //passo * dt = tempo total de simulação (neste caso 10s)
+    //Esses atributos podem ser mudados para melhorar a precisão da simulação
+    
+    //Vetor que armazena saídas do programa junto com cada passo
     double [][] INF_SISTEMA_SUSPENSAO = new double[passo][5];
     /*
      * [passo][0] INF_SISTEMA_SUSPENSAO = Tempo
@@ -35,7 +42,6 @@ public class SistemaDeSuspensao {
      * [passo][4] INF_SISTEMA_SUSPENSAO = Aceleração da massa suspensa
      */
     
-
     // Seta os parâmetros do sistema de suspensão
     public void setParametros(Amortecedor Amortecedor, Mola MolaSuspensao, Mola MolaPneu, Massa MassaSuspensa, Massa MassaNaoSuspensa, Estrada Estrada) {
         this.Amortecedor = Amortecedor;
@@ -44,118 +50,125 @@ public class SistemaDeSuspensao {
         this.MassaSuspensa = MassaSuspensa;
         this.MassaNaoSuspensa = MassaNaoSuspensa;
         this.Estrada = Estrada;
-
-        // Inicializa os valores com base nos objetos fornecidos
-        this.m_s = MassaSuspensa.getMassa();
-        this.m_u = MassaNaoSuspensa.getMassa();
-        this.k_s = MolaSuspensao.getConstanteK();
-        this.k_t = MolaPneu.getConstanteK();
-        this.c_s = Amortecedor.getConstanteC();
-        this.A_sin = Estrada.getAmplitude();
     }
-
+    
+	//------Metodos------
+    //Função faz a simulação e calcula todos os parametros de saída
     public void Calcular() {
+    	
+    	//Variaveis que serão usadas nos calculos do programa
+    	//Matrizes A, B e C estão mais detalhadas nos DOCS, mas basicamente são organizadas de uma forma a ajudar nos calculos do sistema
         double[][] A = {
                 {0, 1, 0, 0},
-                {-k_s / m_s, -c_s / m_s, k_s / m_s, c_s / m_s},
+                {-MolaSuspensao.getConstanteK() / MassaSuspensa.getMassa(), -Amortecedor.getConstanteC() / MassaSuspensa.getMassa(), MolaSuspensao.getConstanteK() / MassaSuspensa.getMassa(), Amortecedor.getConstanteC() / MassaSuspensa.getMassa()},
                 {0, 0, 0, 1},
-                {k_s / m_u, c_s / m_u, -(k_s + k_t) / m_u, -c_s / m_u}
+                {MolaSuspensao.getConstanteK() / MassaNaoSuspensa.getMassa(), Amortecedor.getConstanteC() / MassaNaoSuspensa.getMassa(), -(MolaSuspensao.getConstanteK() + MolaPneu.getConstanteK()) / MassaNaoSuspensa.getMassa(), -Amortecedor.getConstanteC() / MassaNaoSuspensa.getMassa()}
         };
         double[][] B = {
                 {0},
                 {0},
                 {0},
-                {k_t / m_u}
+                {MolaPneu.getConstanteK() / MassaNaoSuspensa.getMassa()}
         };
         double[][] C = {
                 {1, 0, 0, 0},
                 {0, 0, 1, 0}
         };
-
+        
+        //Matriz que guarda o tempo a cada passo
         double[] Tempo = new double[passo];
+        
+        //Matriz que guarda a oscilação da estrada a cada passo
         double[] Oscilação = new double[passo];
+        
+        //Matriz que guarda várias informações a respeito das massas suspensa e não suspensa  a cada passo
+        double[] x = {0, 0, 0, 0};
+        /*
+         * x[0] = Deslocamento da massa suspensa
+         * x[1] = Velocidade da massa suspensa
+         * x[2] = Deslocamento da massa não suspensa
+         * x[3] = Velocidade da massa não suspensa
+         */
+        
+        //Matriz que guarda o deslocamento das massa a cada passo
+        double[][] Deslocamento = new double[passo][2];
+        
+        //Guarda as informações de tempo e oscilação nos vetores
         for (int i = 0; i < passo; i++) {
         	INF_SISTEMA_SUSPENSAO [i][0] = i * dt;
         	Tempo[i] = i * dt;
             Oscilação[i] = Estrada.OscilacaoEstrada(Tempo[i]);
         }
 
-        double[] x = {0, 0, 0, 0};
-        double[][] Deslocamento = new double[passo][2];
-
-        RealMatrix AMatrix = new Array2DRowRealMatrix(A);
-        RealMatrix BMatrix = new Array2DRowRealMatrix(B);
-        RealMatrix CMatrix = new Array2DRowRealMatrix(C);
+        //Cria as mesmas matrizes para serem usadas com a biblioteca APACHE
+        RealMatrix MatrizA = new Array2DRowRealMatrix(A);
+        RealMatrix MatrizB = new Array2DRowRealMatrix(B);
+        RealMatrix MatrizC = new Array2DRowRealMatrix(C);
 
         for (int i = 0; i < passo; i++) {
-            RealMatrix xMatrix = new Array2DRowRealMatrix(x);
-            RealMatrix OscilaçãoMatrix = new Array2DRowRealMatrix(new double[]{Oscilação[i]});
+        	
+            //Cria as mesmas matrizes para serem usadas com a biblioteca APACHE
+            RealMatrix xMatriz = new Array2DRowRealMatrix(x);
+            RealMatrix OscilaçãoMatriz = new Array2DRowRealMatrix(new double[]{Oscilação[i]});
 
-            RealMatrix k1 = CalcularDerivada(AMatrix, BMatrix, xMatrix, OscilaçãoMatrix);
-            RealMatrix k2 = CalcularDerivada(AMatrix, BMatrix, xMatrix.add(k1.scalarMultiply(dt / 2)), OscilaçãoMatrix);
-            RealMatrix k3 = CalcularDerivada(AMatrix, BMatrix, xMatrix.add(k2.scalarMultiply(dt / 2)), OscilaçãoMatrix);
-            RealMatrix k4 = CalcularDerivada(AMatrix, BMatrix, xMatrix.add(k3.scalarMultiply(dt)), OscilaçãoMatrix);
+            //k1, k2, k3, k4 são números do metodo de Runge-Kutta
+            RealMatrix k1 = CalcularDerivada(MatrizA, MatrizB, xMatriz, OscilaçãoMatriz);
+            RealMatrix k2 = CalcularDerivada(MatrizA, MatrizB, xMatriz.add(k1.scalarMultiply(dt / 2)), OscilaçãoMatriz);
+            RealMatrix k3 = CalcularDerivada(MatrizA, MatrizB, xMatriz.add(k2.scalarMultiply(dt / 2)), OscilaçãoMatriz);
+            RealMatrix k4 = CalcularDerivada(MatrizA, MatrizB, xMatriz.add(k3.scalarMultiply(dt)), OscilaçãoMatriz);
 
+            //Calculo do dx a partir da equação de Runge-Kutta
             RealMatrix dx = k1.add(k2.scalarMultiply(2)).add(k3.scalarMultiply(2)).add(k4).scalarMultiply(dt / 6);
 
-            x = xMatrix.add(dx).getColumn(0);
+            //dx é adicionado ao x
+            x = xMatriz.add(dx).getColumn(0);
            
-            
-            RealMatrix DeslocamentoMatrix = CMatrix.multiply(new Array2DRowRealMatrix(x));
+            //Deslocamento é calculado a partir do novo x
+            RealMatrix DeslocamentoMatriz = MatrizC.multiply(new Array2DRowRealMatrix(x));
 
-            Deslocamento[i][0] = DeslocamentoMatrix.getEntry(0, 0);
+            //Vetor deslocamento guarda o deslocamento da massa suspensa calculado no passo i
+            Deslocamento[i][0] = DeslocamentoMatriz.getEntry(0, 0);
+            //Guarda o deslocamento da massa suspensa calculado no passo i
             setINF_SISTEMA_SUSPENSAO_Desl_Massa_Sus(i, Deslocamento[i][0]);
-            MassaSuspensa.setPosição(Deslocamento[i][0]);
             
-            Deslocamento[i][1] = DeslocamentoMatrix.getEntry(1, 0);
+            //Vetor deslocamento guarda o deslocamento da massa não suspensa calculado no passo i
+            Deslocamento[i][1] = DeslocamentoMatriz.getEntry(1, 0);
+            //Guarda o deslocamento da massa não suspensa calculado no passo i
             setINF_SISTEMA_SUSPENSAO_Desl_Massa_N_Sus(i, Deslocamento[i][1]);
-            MassaNaoSuspensa.setPosição(Deslocamento[i][1]);
             
+            //Calcula a diferença de deslocamento e guarda a cada passo i
             setINF_SISTEMA_SUSPENSAO_Diferença_Desl(i, Deslocamento[i][1]-Deslocamento[i][0]);
-            
-            
-         // Derivadas de posição: as velocidades são as derivadas da posição
-            double dx0_dt = x[1];  // Velocidade da massa suspensa
-            double dx2_dt = x[3];  // Velocidade da massa não suspensa
 
-            // Derivadas de velocidade (aceleração):
-            double dx1_dt = (k_s * (x[2] - x[0]) + c_s * (x[3] - x[1])) / m_s;  // Aceleração da massa suspensa
-            double dx3_dt = (k_t * (x[2] - x[0]) - k_s * (x[2] - x[0]) - c_s * (x[1] - x[3])) / m_u;  // Aceleração da massa não suspensa
-
-            
-            
-            // Agora você tem as acelerações diretamente, e pode aplicar Runge-Kutta para atualizar as variáveis de estado
-            //System.out.printf("%f\n", Deslocamento[i][1]);
-            //System.out.printf("%f\n", Deslocamento[i][0]);
-            //System.out.printf("%f\n", dx2_dt);
-            //System.out.printf("%f\n", dx0_dt);
-            //System.out.printf("%f\n", dx1_dt);
-            
-            double acel = (k_s * (Deslocamento[i][1] - Deslocamento[i][0]) + c_s * (x[3] - x[1])) / m_s;
-            
+            //Variavel que calcula a aceleração da massa suspensa
+            double acel = (MolaSuspensao.getConstanteK() * (Deslocamento[i][1] - Deslocamento[i][0]) + Amortecedor.getConstanteC() * (x[3] - x[1])) / MassaSuspensa.getMassa();
+            //Guarda a aceleração da massa suspensa a cada passo i
             setINF_SISTEMA_SUSPENSAO_Aceleracao_Sus(i, acel);
             
-            
+            //Pega o deslocamento maximo da massa suspensa durante a simulação
             if (getDeslocamentoMAX_SUS() < Deslocamento[i][0]) {
             	setDeslocamentoMAX_SUS(Deslocamento[i][0]);
             }
-
+            //Pega o deslocamento maximo da massa não suspensa durante a simulação
             if (getDeslocamentoMAX_N_SUS() < Deslocamento[i][1]) {
             	setDeslocamentoMAX_N_SUS(Deslocamento[i][1]);
             }
+            //Calcula o pico de aceleração durante a simulação
             if (getPICO_ACELERACAO() < acel) {
             	setPICO_ACELERACAO(acel);
             }
-            	soma_acel = soma_acel +  Math.pow(Math.abs(acel), 2);
-            	
+            
+            //Calcula a soma das acelerações
+            soma_acel = soma_acel +  Math.pow(Math.abs(acel), 2);
+            
+            //Se for a última volta, calcula o RMS
             if (i == 999) {
             	 System.out.printf("a%f\n", soma_acel);
-            	setRMS_ACELERACAO(Math.sqrt(soma_acel/1000));
+            	setRMS_ACELERACAO(Math.sqrt(soma_acel/passo));
             }
-            
         }
     }
 
+    //Função que calcula a derivada de x
     private static RealMatrix CalcularDerivada(RealMatrix A, RealMatrix B, RealMatrix x, RealMatrix Oscilação) {
         return A.multiply(x).add(B.multiply(Oscilação));
     }
@@ -192,10 +205,8 @@ public class SistemaDeSuspensao {
     public void setRMS_ACELERACAO(double RMS_ACELERACAO) {
         this.RMS_ACELERACAO = RMS_ACELERACAO;
     }
-    
-    
-    
-    //setters
+
+    //setters das informações de saída do sistema de suspensão
     public void setINF_SISTEMA_SUSPENSAO_Tempo(int passo, double Tempo) {
     	this.INF_SISTEMA_SUSPENSAO[passo][0] = Tempo;
     }
@@ -212,7 +223,7 @@ public class SistemaDeSuspensao {
     	this.INF_SISTEMA_SUSPENSAO[passo][4] = Aceleracao_Sus;
     }
     
-    //getters
+    //getters das informações de saída do sistema de suspensão
     public double getINF_SISTEMA_SUSPENSAO_Tempo(int passo) {
         return this.INF_SISTEMA_SUSPENSAO[passo][0];
     }

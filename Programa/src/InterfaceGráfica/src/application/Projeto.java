@@ -8,12 +8,18 @@ import java.io.FileReader;
 
 public class Projeto {
 
+	//------Atributos------
+	
     private String Nome;
     Simulador simulador = new Simulador();
+    
+    //------Construtor------
+    
     public Projeto(String nome) {
         this.Nome = nome;
     }
-
+    //------Metodos------
+    
     // Função para salvar os dados no arquivo
     public void SalvarDados(double RigidezSuspensao, double MassaSuspensa, double MassaNaoSuspensa, double Amortecimento, double RigidezPneu) {
         try {
