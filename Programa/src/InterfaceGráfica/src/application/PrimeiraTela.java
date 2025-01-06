@@ -90,13 +90,17 @@ class PrimeiraTela {
         	simulador.abrirTelaDeImportação(importar);
         });
         botãoS.setOnAction(event->{
-        	importar = true;
-        	primeriaTela.close();
-        	simulador.abrirTelaDeImportação(importar);
+        	if(simulador.TodosOsValoresPreenchidos()) {
+        		importar = true;
+        		primeriaTela.close();
+        		simulador.abrirTelaDeImportação(importar);
+        	}
         });
         botãoN.setOnAction(event->{
-        	primeriaTela.close();
-        	simulador.abrirSegundaTela();
+        	if(simulador.TodosOsValoresPreenchidos()) {
+        		primeriaTela.close();
+        		simulador.abrirSegundaTela();
+        	}
         });
     }
 }

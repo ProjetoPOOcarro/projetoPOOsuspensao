@@ -4,10 +4,10 @@ clc; clearvars; close all;
 
 % Parâmetros
 m_s = 250;      % Massa suspensa (kg) - 250 a 500 kg 
-m_u = 25;       % Massa não suspensa (kg) - 25 a 75 kg
-k_s = 50000;    % Rigidez da suspensão (N/m) - 10 000 a 50 000 N/m
-k_t = 250000;   % Rigidez do pneu (N/m) - 150 000 a 250 000 N/m
-c_s = 5000;     % Amortecimento da suspensão (Ns/m) - 1 000 a 5 000 Ns/m
+m_u = 50;       % Massa não suspensa (kg) - 25 a 75 kg
+k_s = 15000;    % Rigidez da suspensão (N/m) - 10 000 a 50 000 N/m
+k_t = 20000;   % Rigidez do pneu (N/m) - 150 000 a 250 000 N/m
+c_s = 1000;     % Amortecimento da suspensão (Ns/m) - 1 000 a 5 000 Ns/m
 
 % Matrizes do Espaço de Estados
 A = [0, 1, 0, 0;
@@ -27,13 +27,19 @@ u = A_input * sin(2 * pi * t); % Entrada de excitação (altura do solavanco)
 x = zeros(4, length(t)); % Estados: [x_s; dx_s; x_u; dx_u]
 y = zeros(2, length(t)); % Saída: [x_s; x_u]
 
-% Integração Numérica (Método de Euler)
+% Função de Derivada do Sistema (dx/dt = A*x + B*u)
+dx_dt = @(x, u) A * x + B * u;
+
+% Integração Numérica (RK4)
 dt = t(2) - t(1); % Passo de tempo
 for i = 1:length(t)-1
-    % Derivada dos Estados
-    dx = A * x(:, i) + B * u(i);
-    % Atualização dos Estados
-    x(:, i+1) = x(:, i) + dx * dt;
+    % Runge-Kutta 4th order
+    k1 = dx_dt(x(:, i), u(i));
+    k2 = dx_dt(x(:, i) + 0.5 * dt * k1, u(i));
+    k3 = dx_dt(x(:, i) + 0.5 * dt * k2, u(i));
+    k4 = dx_dt(x(:, i) + dt * k3, u(i));
+    x(:, i+1) = x(:, i) + (dt / 6) * (k1 + 2*k2 + 2*k3 + k4);
+    
     % Cálculo da Saída
     y(:, i) = C * x(:, i) + D * u(i);
 end
@@ -42,13 +48,12 @@ end
 y(:, end) = C * x(:, end) + D * u(end);
 
 % --- Cálculo da Aceleração da Massa Suspensa ---
-
 x_s = x(1, :);         % Deslocamento da massa suspensa
 dx_s = x(2, :);        % Velocidade da massa suspensa
 x_u = x(3, :);         % Deslocamento da massa não suspensa
 dx_u = x(4, :);        % Velocidade da massa não suspensa
 
-acel_suspensa = (k_s * (x_u - x_s) + c_s * (dx_u - dx_s)) / m_s;  % Aceleração da massa suspensa
+acel_suspensa = (-k_s * (x_s - x_u) - c_s * (dx_s - dx_u)) / m_s;  % Aceleração da massa suspensa
 
 % --- Cálculo do Deslocamento da Suspensão ---
 desl_susp = x_u - x_s;  % Deslocamento relativo (x_u - x_s)
@@ -93,7 +98,7 @@ fprintf('RMS da Aceleração da Massa Suspensa (Conforto): %.4f m/s^2\n', rms_ac
 max_acel_suspensa = max(abs(acel_suspensa));
 fprintf('Pico da Aceleração da Massa Suspensa (Conforto): %.4f m/s^2\n', max_acel_suspensa);
 
-% Estatísticas do Deslocamento Relativo da Suspensão
+% Pico do Deslocamento Relativo da Suspensão
 max_desl_susp = max(abs(desl_susp));
 fprintf('Pico do Deslocamento Relativo da Suspensão: %.4f m\n', max_desl_susp);
 rms_desl_susp = rms(desl_susp);
