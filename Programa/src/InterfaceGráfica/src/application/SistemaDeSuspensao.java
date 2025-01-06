@@ -12,6 +12,9 @@ public class SistemaDeSuspensao {
     Estrada Estrada;
     private double DeslocamentoMAX_SUS = 0;
     private double DeslocamentoMAX_N_SUS = 0;
+    private double PICO_ACELERACAO = 0;
+    private double RMS_ACELERACAO;
+    double soma_acel;
 
     // Deixei as siglas para auxiliar nos cálculos
     double m_s;
@@ -140,6 +143,16 @@ public class SistemaDeSuspensao {
             if (getDeslocamentoMAX_N_SUS() < Deslocamento[i][1]) {
             	setDeslocamentoMAX_N_SUS(Deslocamento[i][1]);
             }
+            if (getPICO_ACELERACAO() < acel) {
+            	setPICO_ACELERACAO(acel);
+            }
+            	soma_acel = soma_acel +  Math.pow(Math.abs(acel), 2);
+            	
+            if (i == 999) {
+            	 System.out.printf("a%f\n", soma_acel);
+            	setRMS_ACELERACAO(Math.sqrt(soma_acel/1000));
+            }
+            
         }
     }
 
@@ -163,6 +176,24 @@ public class SistemaDeSuspensao {
     public void setDeslocamentoMAX_N_SUS(double deslocamentoMAX_N_SUS) {
         this.DeslocamentoMAX_N_SUS = deslocamentoMAX_N_SUS;
     }
+    //Getter do Pico de aceleração
+    public double getPICO_ACELERACAO() {
+        return PICO_ACELERACAO;
+    }
+    //Setter do Pico de aceleração
+    public void setPICO_ACELERACAO(double PICO_ACELERACAO) {
+        this.PICO_ACELERACAO = PICO_ACELERACAO;
+    }
+    //Getter do RMS da aceleração
+    public double getRMS_ACELERACAO() {
+        return RMS_ACELERACAO;
+    }
+    //Setter do RMS da aceleração
+    public void setRMS_ACELERACAO(double RMS_ACELERACAO) {
+        this.RMS_ACELERACAO = RMS_ACELERACAO;
+    }
+    
+    
     
     //setters
     public void setINF_SISTEMA_SUSPENSAO_Tempo(int passo, double Tempo) {
@@ -201,35 +232,4 @@ public class SistemaDeSuspensao {
     public double getINF_SISTEMA_SUSPENSAO_Aceleracao_Sus(int passo) {
         return this.INF_SISTEMA_SUSPENSAO[passo][4];
     }
-    
-    
-    public static void main(String[] args) {
-        Amortecedor amortecedor = new Amortecedor();
-        amortecedor.setConstanteC(1000);
-        Mola molaSuspensao = new Mola();
-        molaSuspensao.setConstanteK(15000);
-        Mola molaPneu = new Mola();
-        molaPneu.setConstanteK(200000);
-        Massa massaSuspensa = new Massa();
-        massaSuspensa.setMassa(250);
-        Massa massaNaoSuspensa = new Massa();
-        massaNaoSuspensa.setMassa(50);
-        Estrada estrada = new Estrada(0.1);
-
-        SistemaDeSuspensao sis = new SistemaDeSuspensao();
-        sis.setParametros(amortecedor, molaSuspensao, molaPneu, massaSuspensa, massaNaoSuspensa, estrada);
-
-        sis.Calcular();
-
-
-        // Altere o limite do laço de 1000 para 999 para garantir que não ultrapasse o índice máximo
-        for (int i = 0; i < 1000; i++) {
-            //System.out.printf("\nTempo: %.3f", sis.getINF_SISTEMA_SUSPENSAO_Tempo(i));
-           // System.out.printf("***%.3f", sis.getINF_SISTEMA_SUSPENSAO_Desl_Massa_Sus(i));
-            //System.out.printf("***%.3f", sis.getINF_SISTEMA_SUSPENSAO_Desl_Massa_N_Sus(i));
-            //System.out.printf("***%.3f", sis.getINF_SISTEMA_SUSPENSAO_Diferença_Desl(i));
-            //System.out.printf("%f\n", sis.getINF_SISTEMA_SUSPENSAO_Aceleracao_Sus(i));
-        }
-    }
-    
 }
