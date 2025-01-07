@@ -1,9 +1,11 @@
+/*
+ * essa classe serve para criar uma animação de um carro que sofre os efeitos calculados do comportamentos
+ *do amortecedor de forma simulada 
+ */
 package application;
 
 import javafx.scene.image.Image;
 import javafx.animation.TranslateTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -14,16 +16,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 public class animação {
-	private double deslocamentoY;
-    public Scene criarAnimação(double Vmax,double Vmin) {
+	
+	 public Scene criarAnimação(double Vmax,double Vmin) {
         Circle roda1 = new Circle(50, Color.BLACK);
-        roda1.setRadius(10); // Deslocamento da suspensão aceleração da massa suspensa
-        roda1.setCenterX(-40);
+        roda1.setRadius(10); 
+        roda1.setCenterX(-40);//posição incial em x da roda fora da tela
         roda1.setCenterY(300);
 
         Circle roda2 = new Circle(50, Color.BLACK);
         roda2.setRadius(10);
-        roda2.setCenterX(-10);
+        roda2.setCenterX(-10);//posição incial em x da roda fora da tela
         roda2.setCenterY(300);
 
         Rectangle carro = new Rectangle(50, 20, Color.RED); // Largura, altura, cor
@@ -52,8 +54,9 @@ public class animação {
 
         Pane grupo1 = new Pane(cabine, carro, farol, paraBrisa);
         Pane grupo2 = new Pane(roda1, roda2);
+        //separação dos elementos animados em grupos para animar juntos ao invés de animar um por um 
         Pane painel = new Pane();
-        painel.getChildren().addAll(imageViewFundo, grupo1, grupo2);
+        painel.getChildren().addAll(imageViewFundo, grupo1, grupo2);//junta tudo em um grupo só para mostrar na tela
 
         // Configurando a animação em X da massa suspensa
         TranslateTransition translateX = new TranslateTransition();
@@ -67,10 +70,10 @@ public class animação {
         // Configurando a animação em Y da massa suspensa
         TranslateTransition translateY = new TranslateTransition();
         translateY.setNode(grupo1);
-        translateY.setDuration(Duration.seconds(0)); // Duração de 1 segundo
+        translateY.setDuration(Duration.seconds(1)); // Duração de 1 segundo
         translateY.setByY(0);
-        translateY.setCycleCount(1); // Repetir indefinidamente
-        translateY.setAutoReverse(false); // Reverter automaticamente
+        translateY.setCycleCount(1); // não repetir indefinidamente
+        translateY.setAutoReverse(false); // não reverter automaticamente
         translateY.play();
         
         TranslateTransition translateY2 = new TranslateTransition();
@@ -91,15 +94,16 @@ public class animação {
         translate2.play();
         
         Text Conforto;
-
-        if(Vmax<=0.5) {
+        SistemaDeSuspensao PicoDeAceleração = new SistemaDeSuspensao();
+        double AceleraçãoMax = PicoDeAceleração.getPICO_ACELERACAO();
+        if(AceleraçãoMax<=0.5) {
         	Conforto = new Text(10, 20, "Faixa idela Para conforto");
         	Conforto.setFill(Color.BLACK);
         }
         else {
         	Conforto = new Text(10, 20, "Faixa não idela Para conforto");
         	Conforto.setFill(Color.BLACK);
-        }
+        }//diz se o resultado da aceleração é o ideal ou não
         painel.getChildren().add(Conforto);
 
         Scene cena = new Scene(painel, 580, 320);
