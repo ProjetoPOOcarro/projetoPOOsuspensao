@@ -1,3 +1,7 @@
+/*
+ * classe que cria a tela onde o usuário informa o nome do arquivo em que as informações
+ * serão armazenadas ou onde estão armazendas
+ */
 package application;
 
 import javafx.scene.Scene;
