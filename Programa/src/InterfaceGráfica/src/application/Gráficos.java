@@ -62,7 +62,7 @@ public class Gráficos {
             aux++;
         }));
 
-        timeline.setCycleCount(500); // Configurar para durar 10 segundos (20 atualizações de 0.5 segundos)
+        timeline.setCycleCount(1000); // Configurar para durar 10 segundos (20 atualizações de 0.5 segundos)
         timeline.play();
 
         // Adicionar o texto e o gráfico ao painel
@@ -97,7 +97,7 @@ public class Gráficos {
             aux2++;
         }));
 
-        timeline.setCycleCount(500); 
+        timeline.setCycleCount(1000); 
         timeline.play();
 
         Pane painel = new Pane();
@@ -129,7 +129,7 @@ public class Gráficos {
              });
             aux3++;
         }));
-        timeline.setCycleCount(500);
+        timeline.setCycleCount(1000);
         timeline.play();
         
         double picoDaAceleracao = sistema.getPICO_ACELERACAO();
