@@ -1,5 +1,8 @@
 package application;
-
+/*
+ * Essa classe serve para controlar atribuição de paramêtros recebidos na primeira tela, além de controlar
+ * o acionamento da animação e dos gráficos
+ */
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -17,23 +20,23 @@ public class Simulador {
     Stage Importar = new Stage();
     public void atribuirValor(int aux, double valor) {
     	//0 valor da rigidez da suspensão (Ks), 1 valor da massa suspensa(Kg), 
-    	 //2 valor da massa não suspensa(Kg),3 o coeficiente de amortecimento (Cs),
-    	 //4 a rigidez do pneu (Kt)
+    	//2 valor da massa não suspensa(Kg),3 o coeficiente de amortecimento (Cs),
+    	//4 a rigidez do pneu (Kt)
     	valores[aux] = valor;
     	contador++;
     }
-    public void atribuirValoresImportados(String nome) {
+    public void atribuirValoresImportados(String nome) {//puxa os valores do arquivo
     	Projeto valor = new Projeto(nome);
     	valores = valor.LerDados();
     	abrirSegundaTela();
     }
-    public void SalvarNoArquivo(String nome) {
+    public void SalvarNoArquivo(String nome) {//armazena os valores digitados em um vetor
     	Projeto valor = new Projeto(nome);
     	valor.SalvarDados(valores[0],valores[1],valores[2],valores[3],valores[4]);
     	abrirSegundaTela();
     }
     public boolean TodosOsValoresPreenchidos() {
-    	return contador == 5;
+    	return contador >= 5;//serve para verificar se todos os valores foram preenchidos
     }
 
     public void abrirSegundaTela() {
@@ -43,7 +46,7 @@ public class Simulador {
         Mola molaPneu = new Mola(); // Usa o valor de rigidez do pneu
         molaPneu.setConstanteK(valores[4]);
         
-     // Criação e configuração das massas
+        // Criação e configuração das massas
         Massa massaSuspensa = new Massa(); // Massa suspensa
         massaSuspensa.setMassa(valores[1]);
         

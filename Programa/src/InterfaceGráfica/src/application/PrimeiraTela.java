@@ -1,3 +1,6 @@
+/*
+ * Cria os elementos da interface gráfica
+ */
 package application;
 
 import javafx.scene.Scene;
@@ -69,7 +72,7 @@ class PrimeiraTela {
         return new Scene(painel, 580, 360);
     }
 
-    private void configurarBotao(int aux, Stage primeriaTela) {
+    private void configurarBotao(int aux, Stage primeriaTela) {//configura a ação de todos os botões
     	botoes[aux].setOnAction(event -> {
             try {
                 valor = Double.parseDouble(caixasDeTexto[aux].getText());
