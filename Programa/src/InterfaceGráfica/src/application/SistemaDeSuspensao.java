@@ -173,6 +173,8 @@ public class SistemaDeSuspensao {
         return A.multiply(x).add(B.multiply(Oscilação));
     }
     
+    //------Getters e Setters------
+    
     //Getter do Deslocamento Maximo da massa suspensa
     public double getDeslocamentoMAX_SUS() {
         return DeslocamentoMAX_SUS;
