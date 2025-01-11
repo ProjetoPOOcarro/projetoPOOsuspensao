@@ -11,17 +11,18 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 class PrimeiraTela {
-	private double valor;
-	private boolean importar = false;
-    private TextField[] caixasDeTexto = new TextField[5];
+	private boolean[] botaoClicado = new boolean[5]; // Array para controle de cliques
+	private double valor;//amazenar os valores das caixas de texto
+	private boolean importar = false;//sinaliza se é necessário criar uma tela para digitar o nome do arquivo cujos dados serão importador
+    private TextField[] caixasDeTexto = new TextField[5];//array para amazenar as caixas de texto
     private Button[] botoes = new Button[5];
-    private Button botão = new Button();
-    private Button botãoS = new Button();
-    private Button botãoN = new Button();
+    private Button botão = new Button();//botão para importar informação de arquivos
+    private Button botãoS = new Button();//botão para salvar os dados em arquivos
+    private Button botãoN = new Button();//botão para iniciar a simulação direto
     Simulador simulador = new Simulador();
     Pane painel = new Pane();
     
-    public Scene criarCena(Stage primeriaTela) {
+    public Scene criarCena(Stage primeriaTela) {//cria os elementos da tela
         Label titulo = new Label("|SIMULADOR DE UM QUARTO DE SUSPENSÃO VEICULAR|");
         titulo.setStyle("-fx-font-size: 20px; -fx-font-family: 'Arial';");
         titulo.setLayoutX(10);
@@ -74,20 +75,35 @@ class PrimeiraTela {
 
     private void configurarBotao(int aux, Stage primeriaTela) {//configura a ação de todos os botões
     	botoes[aux].setOnAction(event -> {
-            try {
-                valor = Double.parseDouble(caixasDeTexto[aux].getText());
-                if(valor<=0) {
-                	caixasDeTexto[aux].setStyle("-fx-border-color: red;");
-                }
-                else {
-                	 simulador.atribuirValor(aux, valor);
-                     caixasDeTexto[aux].setStyle("-fx-border-color: green;");
-                }
-            } 
-            catch (NumberFormatException erro) {
-                caixasDeTexto[aux].setStyle("-fx-border-color: red;");
-            }
-        });
+    	    if (botaoClicado[aux]==false) { // Apenas executa se ainda não foi clicado
+    	        try {
+    	            valor = Double.parseDouble(caixasDeTexto[aux].getText());
+    	            if (valor <= 0) {
+    	                caixasDeTexto[aux].setStyle("-fx-border-color: red;");
+    	            } else {
+    	                simulador.atribuirValor(aux, valor);
+    	                simulador.contador();
+    	                caixasDeTexto[aux].setStyle("-fx-border-color: green;");
+    	                botaoClicado[aux] = true; // Marca como clicado
+    	            }
+    	        } catch (NumberFormatException erro) {
+    	            caixasDeTexto[aux].setStyle("-fx-border-color: red;");
+    	        }
+    	    }
+    	    else {//caso queira substituir o valor digitado
+    	    	try {
+    	            valor = Double.parseDouble(caixasDeTexto[aux].getText());
+    	            if (valor <= 0) {
+    	                caixasDeTexto[aux].setStyle("-fx-border-color: red;");
+    	            } else {
+    	                simulador.atribuirValor(aux, valor);
+    	                caixasDeTexto[aux].setStyle("-fx-border-color: green;");
+    	            }
+    	        } catch (NumberFormatException erro) {
+    	            caixasDeTexto[aux].setStyle("-fx-border-color: red;");
+    	        }
+    	    }
+    	});
         botão.setOnAction(event->{
         	primeriaTela.close();
         	simulador.abrirTelaDeImportação(importar);
