@@ -23,7 +23,6 @@ public class Simulador {
     	//2 valor da massa não suspensa(Kg),3 o coeficiente de amortecimento (Cs),
     	//4 a rigidez do pneu (Kt)
     	valores[aux] = valor;
-    	contador++;
     }
     public void atribuirValoresImportados(String nome) {//puxa os valores do arquivo
     	Projeto valor = new Projeto(nome);
@@ -36,9 +35,11 @@ public class Simulador {
     	abrirSegundaTela();
     }
     public boolean TodosOsValoresPreenchidos() {
-    	return contador >= 5;//serve para verificar se todos os valores foram preenchidos
+    	return contador == 5;//serve para verificar se todos os valores foram preenchidos
     }
-
+    public void contador() {//armazena os valores digitados em um vetor
+    	contador++;
+    }
     public void abrirSegundaTela() {
     	Mola molaSuspensao = new Mola(); // Usa o valor de rigidez da suspensão
     	molaSuspensao.setConstanteK(valores[0]);
