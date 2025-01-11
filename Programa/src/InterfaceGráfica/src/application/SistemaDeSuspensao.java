@@ -1,7 +1,5 @@
 package application;
 /*
- * - 
- * - 
  * - Classe simula um sistema de suspensão com massas, molas e um amortecedor percorrendo uma estrada
  * - Foi adicionada a biblioteca APACHE para ajudar a resolver os cálculos deste programa
  */
