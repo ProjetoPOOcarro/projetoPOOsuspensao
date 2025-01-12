@@ -24,9 +24,9 @@ public class SistemaDeSuspensao {
     private double RMS_ACELERACAO;
     
     //Atributos que ajudam nos cálculos
-    double soma_acel;
-    double dt = 0.01;//Passo de tempo (s)
-    int passo = 1000;//Número de passos
+    public double soma_acel;
+    public double dt = 0.01;//Passo de tempo (s)
+    public int passo = 1000;//Número de passos
     //passo * dt = tempo total de simulação (neste caso 10s)
     //Esses atributos podem ser mudados para melhorar a precisão da simulação
     
@@ -159,7 +159,7 @@ public class SistemaDeSuspensao {
             soma_acel = soma_acel +  Math.pow(Math.abs(acel), 2);
             
             //Se for a última volta, calcula o RMS
-            if (i == 999) {
+            if (i == (passo - 1)) {
             	 System.out.printf("a%f\n", soma_acel);
             	setRMS_ACELERACAO(Math.sqrt(soma_acel/passo));
             }

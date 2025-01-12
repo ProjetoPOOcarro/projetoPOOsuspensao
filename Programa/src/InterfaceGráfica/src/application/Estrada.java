@@ -17,7 +17,7 @@ public class Estrada {
     
     //Função que calcula a oscilação da estrada
     //Retorna a altura da estrada (pode ser negativa já que o ponto de referencia esta no meio da função)
-	double OscilacaoEstrada(double tempo){
+	public double OscilacaoEstrada(double tempo){
 		double altura = Amplitude * Math.sin(2 * tempo * Math.PI); 
 		return altura;
 	}
