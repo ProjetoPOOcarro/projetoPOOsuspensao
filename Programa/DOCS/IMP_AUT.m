@@ -3,11 +3,11 @@ clc; clearvars; close all;
 %% IMPLEMENTAÇÃO AUTOMÁTICA
 
 % Parâmetros
-m_s = 250;      % Massa suspensa (kg) - 250 a 500 kg 
-m_u = 50;       % Massa não suspensa (kg) - 25 a 75 kg
+m_s = 400;      % Massa suspensa (kg) - 250 a 500 kg 
+m_u = 70;       % Massa não suspensa (kg) - 25 a 75 kg
 k_s = 15000;    % Rigidez da suspensão (N/m) - 10 000 a 50 000 N/m
-k_t = 20000;   % Rigidez do pneu (N/m) - 150 000 a 250 000 N/m
-c_s = 1000;     % Amortecimento da suspensão (Ns/m) - 1 000 a 5 000 Ns/m
+k_t = 160000;   % Rigidez do pneu (N/m) - 150 000 a 250 000 N/m
+c_s = 2500;     % Amortecimento da suspensão (Ns/m) - 1 000 a 5 000 Ns/m
 
 % Matrizes do Espaço de Estados
 A = [0, 1, 0, 0;
@@ -23,7 +23,7 @@ sys = ss(A, B, C, D);
 
 % Parâmetros para Simulação
 A = 0.1;        % Amplitude do solavanco, valor arbitrário
-t = 0:0.01:10;   % Período/Tempo de 0 a 5 segundo com degrau (step) de 0.01 s
+t = 0:0.01:10;  % Período/Tempo de 0 a 10 segundos com degrau (step) de 0.01 s
 
 % Simulação
 u = A * sin(2 * pi * t);        % Excitação da rua de 0.1 m (altura do solavanco)
@@ -79,13 +79,13 @@ grid on;
 rms_acel_suspensa = rms(acel_suspensa);
 fprintf('RMS da Aceleração da Massa Suspensa (Conforto): %.4f m/s^2\n', rms_acel_suspensa);
 max_acel_suspensa = max(abs(acel_suspensa));
-fprintf('Pico da Aceleração da Massa Suspensa (Conforto): %.4f m\n', max_acel_suspensa);
+fprintf('Pico da Aceleração da Massa Suspensa (Conforto): %.4f m/s^2\n', max_acel_suspensa);
 
 % Pico do Deslocamento Relativo da Suspensão
+rms_desl_susp = rms(desl_susp);
+fprintf('RMS do Deslocamento Relativo da Suspensão: %.4f m\n', rms_desl_susp);
 max_desl_susp = max(abs(desl_susp));
 fprintf('Pico do Deslocamento Relativo da Suspensão: %.4f m\n', max_desl_susp);
-rms_desl_susp = rms(desl_susp);
-fprintf('RMS do Deslocamento Relativo da Suspensão: %.4f m/s^2\n', rms_desl_susp);
 
 % figure;
 % plot(t, u, 'LineWidth', 1.5);
