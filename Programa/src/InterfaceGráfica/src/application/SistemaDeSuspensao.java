@@ -160,7 +160,6 @@ public class SistemaDeSuspensao {
             
             //Se for a última volta, calcula o RMS
             if (i == (passo - 1)) {
-            	 System.out.printf("a%f\n", soma_acel);
             	setRMS_ACELERACAO(Math.sqrt(soma_acel/passo));
             }
         }
@@ -243,4 +242,5 @@ public class SistemaDeSuspensao {
     public double getINF_SISTEMA_SUSPENSAO_Aceleracao_Sus(int passo) {
         return this.INF_SISTEMA_SUSPENSAO[passo][4];
     }
+        
 }

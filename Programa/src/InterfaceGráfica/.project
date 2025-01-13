@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>dasdasdas</name>
+	<name>SimuladorSISTEMADESUSPENSÃO</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -24,37 +24,32 @@
 		<link>
 			<name>.classpath</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/OneDrive/%C3%81rea%20de%20Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGr%C3%A1fica/.classpath</locationURI>
+			<location>C:/Users/lucas/OneDrive/Área de Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGráfica/.classpath</location>
 		</link>
 		<link>
 			<name>.gitignore</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/OneDrive/%C3%81rea%20de%20Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGr%C3%A1fica/.gitignore</locationURI>
+			<location>C:/Users/lucas/OneDrive/Área de Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGráfica/.gitignore</location>
 		</link>
 		<link>
 			<name>.project</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/OneDrive/%C3%81rea%20de%20Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGr%C3%A1fica/.project</locationURI>
-		</link>
-		<link>
-			<name>bin</name>
-			<type>2</type>
-			<locationURI>PARENT-2-PROJECT_LOC/OneDrive/%C3%81rea%20de%20Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGr%C3%A1fica/bin</locationURI>
+			<location>C:/Users/lucas/OneDrive/Área de Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGráfica/.project</location>
 		</link>
 		<link>
 			<name>images.jpg</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/OneDrive/%C3%81rea%20de%20Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGr%C3%A1fica/images.jpg</locationURI>
+			<location>C:/Users/lucas/OneDrive/Área de Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGráfica/images.jpg</location>
 		</link>
 		<link>
-			<name>projetoPOOsuspensao</name>
+			<name>saves</name>
 			<type>2</type>
-			<locationURI>PARENT-2-PROJECT_LOC/OneDrive/%C3%81rea%20de%20Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGr%C3%A1fica/projetoPOOsuspensao</locationURI>
+			<location>C:/Users/lucas/OneDrive/Área de Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGráfica/saves</location>
 		</link>
 		<link>
 			<name>src</name>
 			<type>2</type>
-			<locationURI>PARENT-2-PROJECT_LOC/OneDrive/%C3%81rea%20de%20Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGr%C3%A1fica/src</locationURI>
+			<location>C:/Users/lucas/OneDrive/Área de Trabalho/projetoPOOsuspensao/projetoPOOsuspensao/Programa/src/InterfaceGráfica/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>
